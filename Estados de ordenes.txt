@@ -1,0 +1,15 @@
+###
+pendiente de picking
+en picking
+picking completo
+pickimg completado
+
+###
+pendiente de auditar
+en auditoria
+auditoria exitosa
+auditoria con error
+
+###
+
+Pendiente de envio/retiro
