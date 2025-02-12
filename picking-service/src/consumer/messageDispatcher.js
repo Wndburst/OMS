@@ -11,7 +11,8 @@ module.exports = {
       await pool.query(`
         INSERT INTO Order_Product (orderID, itemcode, quantity, pickedQuantity, pickingStatusID)
         VALUES (?, ?, ?, 0, 1)
-        ON DUPLICATE KEY UPDATE quantity = VALUES(quantity)
+        ON DUPLICATE KEY UPDATE 
+        quantity = VALUES(quantity)
       `, [msg.orderID, product.itemcode, product.quantity]);
     }
     console.log(`✅ Productos de la orden ${msg.orderID} registrados en Picking Service`);

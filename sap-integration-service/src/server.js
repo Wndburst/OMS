@@ -13,6 +13,9 @@ app.use(express.json());
 // Rutas opcionales
 app.use('/api/scheduler', schedulerRoutes);
 
+
+
+
 // Iniciamos el cron que corre cada 10 min
 startScheduler();
 

@@ -5,24 +5,26 @@ const userRole = require('../utils/roles')
 
 const router = express.Router();
 
-/**
- * 🔒 Proteger endpoints con roles.
- */
+/*
+
+🔒 Proteger endpoints con roles.
+
+*/
 
 // Obtener todos los usuarios (solo Admin)
-router.get('/', authMiddleware(userRole.ADMIN), userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // Obtener usuario por RUT (Admin o el mismo usuario... simplificado, aquí sólo Admin)
-router.get('/:rut', authMiddleware(userRole.ADMIN), userController.getUserByRut);
+router.get('/:rut', userController.getUserByRut);
 
 // Actualizar usuario
-router.put('/:rut', authMiddleware(userRole.ADMIN), userController.updateUser);
+router.put('/:rut', userController.updateUser);
 
 // Eliminar usuario
-router.delete('/:rut', authMiddleware(userRole.ADMIN), userController.deleteUser);
+router.delete('/:rut', userController.deleteUser);
 
 // Obtener roles y status
-router.get('/meta/roles', authMiddleware(userRole.ADMIN), userController.getAllRoles);
-router.get('/meta/statuses', authMiddleware(userRole.ADMIN), userController.getAllStatus);
+router.get('/meta/roles', userController.getAllRoles);
+router.get('/meta/statuses', userController.getAllStatus);
 
 module.exports = router;

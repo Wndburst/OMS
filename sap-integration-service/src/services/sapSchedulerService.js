@@ -3,6 +3,7 @@ const cron = require('node-cron');
 const { sendMessage } = require('../producer');
 const ORDERS_SERVICE_URL = process.env.ORDERS_SERVICE_URL;
 const SAP_ENDPOINT = process.env.SAP_ENDPOINT;
+const RETAIL_ENDPOINT = process.env.RETAIL_ENDPOINT;
 
 
 // Obtener el createts máximo de las órdenes
@@ -40,6 +41,30 @@ async function processNewOrders() {
   }
 }
 
+
+// Función para crear una orden a partir del folionum 
+async function createNewOrder(folionum) {
+  try {
+    let { data: order } = await axios.get(`http://192.168.0.91:5021/${folionum}`);
+    
+    // Si la respuesta es un array, tomar el primer elemento para mantener el mismo formato que SAP
+    if (Array.isArray(order)) {
+      order = order[0];
+    }
+
+    console.log(`📥 Se obtuvo la orden con folionum: ${folionum}`);
+    console.log(`📦 Procesando orden orderID=${order.orderID}`);
+    
+    // Enviar la orden a Kafka
+    await sendMessage('sap.order.imported', order);
+    console.log('✅ Proceso completado. Orden enviada a Kafka.');
+  } catch (error) {
+    console.error('❌ Error en createNewOrder:', error);
+    throw error;
+  }
+}
+
+
 //Cron job que se ejecuta cada 10 min
 function startScheduler() {
   // Expresión cron: "*/10 * * * *" => cada 10 minutos
@@ -53,4 +78,5 @@ function startScheduler() {
 module.exports = {
   processNewOrders,
   startScheduler,
+  createNewOrder
 };
