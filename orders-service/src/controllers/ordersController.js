@@ -22,6 +22,18 @@ exports.getOrderById = async (req, res) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+exports.getHistory = async (req, res) => {
+  try {
+    const order = await OrdersService.getHistory(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Orden no encontrada' });
+    }
+    res.json(order);
+  } catch (error) {
+    console.error('Error obteniendo orden:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
 
 exports.updateOrderStatus = async (req, res) => {
   try {

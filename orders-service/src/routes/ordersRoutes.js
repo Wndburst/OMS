@@ -5,7 +5,8 @@ const {
   updateOrderStatus,
   updateOrderProduct,
   getMaxCreatets,
-  getLastQueryDate
+  getLastQueryDate,
+  getHistory
 } = require('../controllers/ordersController');
 
 const authMiddleware = require('../middleware/authMiddleware');
@@ -28,6 +29,8 @@ router.put('/product/:orderProductID', updateOrderProduct);
 router.get('/max/createts', getMaxCreatets);
 router.get('/max/lastQueryDate', getLastQueryDate);
 
+// Ver el historial de una orden
+router.get('/history/:id', getHistory);
 
 // authMiddleware([userRole.ADMIN, userRole.ASSIGNER]) para asignar múltiples roles
 module.exports = router;

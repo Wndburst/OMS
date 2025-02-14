@@ -8,6 +8,16 @@ module.exports = {
         return;
     }
     for (let product of msg.products) {
+      // Insertar el producto en la tabla Products si no existe
+      await pool.query(`
+        INSERT INTO Products (itemcode, dscription, price)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE 
+        dscription = VALUES(dscription),
+        price = VALUES(price)
+      `, [product.itemcode, product.dscription, product.price]);
+
+      // Insertar en Order_Product (productos asociados a una orden)
       await pool.query(`
         INSERT INTO Order_Product (orderID, itemcode, quantity, pickedQuantity, pickingStatusID)
         VALUES (?, ?, ?, 0, 1)

@@ -1,3 +1,4 @@
+
 const ProducerSingleton = require('./ProducerSingleton');
 
 const sendMessage = async (topic, message) => {

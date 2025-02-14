@@ -10,6 +10,27 @@ const OrdersRepository = {
     const [order] = await pool.query('SELECT * FROM Orders WHERE orderID = ?', [orderID]);
     return order.length ? order[0] : null;
   },
+  getHistory: async (orderID) => {
+    const [order] = await pool.query(`
+      SELECT 
+        h.historyID,
+        h.orderID,
+        h.orderStatusID,
+        os1.statusname AS currentStatus,
+        h.previousStatusID,
+        os2.statusname AS previousStatus,
+        h.changeDate,
+        h.isCompleted
+    FROM orders_service_db.order_status_history h
+    LEFT JOIN orders_service_db.order_status os1 
+          ON h.orderStatusID = os1.orderstatusid
+    LEFT JOIN orders_service_db.order_status os2 
+          ON h.previousStatusID = os2.orderstatusid
+    WHERE h.orderID = ?;
+
+      `, [orderID]);
+    return order;
+  },
 
   updateOrderStatus: async (orderID, orderStatusID) => {
     const [result] = await pool.query(

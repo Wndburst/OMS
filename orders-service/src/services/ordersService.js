@@ -9,6 +9,9 @@ const OrdersService = {
   getOrderById: async (orderID) => {
     return await OrdersRepository.getOrderById(orderID);
   },
+  getHistory: async (orderID) => {
+    return await OrdersRepository.getHistory(orderID);
+  },
 
   createOrder: async (orderData, products) => {
     const orderID = await OrdersRepository.createOrder(orderData);

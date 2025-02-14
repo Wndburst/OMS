@@ -71,6 +71,31 @@ const PickingService = {
     await sendMessage('picking.completed', { orderID });
 
     return true;
+  },
+  createBundle: async (orderID, pickerRUT, products) => {
+    const bundleID = await PickingRepository.createBundle(orderID, pickerRUT, products);
+    if (!bundleID) return null;
+
+    // Determinar si el bulto es suelto o múltiple
+    const isLoose = products.length === 1;
+
+    // Publicar evento en Kafka con la información del bulto
+    await sendMessage('bundle.created', { orderID, pickerRUT, bundleID, isLoose });
+    return bundleID;
+  },
+  markProductAsLoose: async (orderProductID) => {
+    const updated = await PickingRepository.markProductAsLoose(orderProductID);
+    return updated;
+  },
+
+  getBundlesByOrder: async (orderID) => {
+    return await PickingRepository.getBundlesByOrder(orderID);
+  },
+  getBundleDetails: async (bundleID) => {
+    return await PickingRepository.getBundleDetails(bundleID);
+  },
+  getOrderProductsWithBundleID: async (orderID) => {
+    return await PickingRepository.getOrderProductsWithBundleID(orderID);
   }
 };
 
